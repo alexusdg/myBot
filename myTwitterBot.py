@@ -1,15 +1,8 @@
 import tweepy
 import requests
+import os.path
 from bs4 import BeautifulSoup
 print('this is my bot')
-
-#create que for urls
-
-
-url = 'https://www.pinterest.com/aldgore/bomb-nails'
-reqs = requests.get(url)
-soup = BeautifulSoup(reqs.text, 'html.parser')
-
 
 CONSUMER_KEY = 'H1mj1FsaQFtK3eJSzViXej7Nu'
 CONSUMER_SECRET = 'qGSIPBlCJvHVjc4X5EdkfJDcfETFk9KV9mCptBuZBWmYsQA3mz'
@@ -21,26 +14,42 @@ auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
 mentions = api.mentions_timeline()
-
 pin_ids_queue = []
-num = 1
-for link in soup.find_all('a'):
-    ##find the most recent pins from website
-    if '/pin/' in link.get('href'):
-     print(str(num) + ' - ' + link.get('href'))
-     #check if in text file
-     with open('alreadyTweeted.txt') as f:
-         if link.get('href') in f.read():
-             continue
-         else:
-            pin_ids_queue.append(link.get('href'))
-            num += 1
 
-     #check if in text file
+def has_it_been_posted(current_link, pin_ids_queue):
+    if os.path.isfile('alreadyTweeted.txt'):
+        with open('alreadyTweeted.txt') as f:
+            #if already in text file continue else add to queue
+            if current_link in f.read():
+                print("here")
+            else:
+                pin_ids_queue.append(current_link)
+                #num += 1
+    else: #when file is newly created add link to it
+         f = open("alreadyTweeted.txt", "x")
+         pin_ids_queue.append(current_link)
 
-#create text file to keep track of pins already posted
-linkToPost = pin_ids_queue.pop(0)
-api.update_status('https://www.pinterest.com' + linkToPost)
-f = open("alreadyTweeted.txt", "a")
-f.write(linkToPost + "\n")
-f.close()
+
+#create que for urls
+def tweetPin():
+    url = 'https://www.pinterest.com/aldgore/bomb-nails'
+    reqs = requests.get(url)
+    soup = BeautifulSoup(reqs.text, 'html.parser')
+
+    num = 1
+    for link in soup.find_all('a'):
+        ##find the most recent pins from website
+        if '/pin/' in link.get('href'):
+         current_link = link.get('href')
+         #print(str(num) + ' - ' + current_link)
+         #check if in text file
+         has_it_been_posted(current_link, pin_ids_queue)
+
+         #check if in text file
+
+    #create text file to keep track of pins already posted
+    linkToPost = pin_ids_queue.pop(0)
+    api.update_status('https://www.pinterest.com' + linkToPost)
+    f = open("alreadyTweeted.txt", "a")
+    f.write(linkToPost + "\n")
+    f.close()
