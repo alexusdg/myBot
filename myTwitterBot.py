@@ -2,12 +2,11 @@ import tweepy
 import requests
 import os.path
 from bs4 import BeautifulSoup
-print('this is my bot')
 
-CONSUMER_KEY = ''
-CONSUMER_SECRET = ''
-ACCESS_KEY = ''
-ACCESS_SECRET = ''
+CONSUMER_KEY = 'Lw8WDdi2fkTMk9YflH3PejlRw'
+CONSUMER_SECRET = 'H2mJ9aDy5VjgXLURNRQRrHkZHSszmF3rtl8dbOrF5EcIyQq76P'
+ACCESS_KEY = '1413976412520951808-SSLCgtkv16Ygfnmh3di0TqL1ILO2gv'
+ACCESS_SECRET = 'CpnC9ic0vIilXWkLRaJWaYQ0El4NlMLkHKXFZP4t03aOw'
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
