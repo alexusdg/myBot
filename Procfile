@@ -1,1 +1,1 @@
-worker: python3 scheduledTwitterBot.py
+run: python3 scheduledTwitterBot.py
